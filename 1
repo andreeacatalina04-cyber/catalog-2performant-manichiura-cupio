@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Catalog Produse</title>
+<style>
+body {
+  font-family: Arial;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+}
+
+.card h3 {
+  font-size: 17px;
+}
+
+.card p {
+  color: #27ae60;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.card a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #007bff;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<h2>Produse recomandate</h2>
+<div id="products" class="grid"></div>
+
+<script>
+const csvUrl = "https://api.2performant.com/feed/3659915f8.csv";
+
+fetch(csvUrl)
+  .then(r => r.text())
+  .then(text => {
+    const rows = text.split("\n").map(r => r.split(","));
+    rows.shift(); // elimină header
+
+    rows.forEach(col => {
+      const title = col[1];
+      const price = col[3];
+      const url = col[5];
+      const image = col[2];
+
+      if (!title || !image) return;
+
+      document.getElementById("products").innerHTML += `
+        <div class="card">
+          <img src="${image}">
+          <h3>${title}</h3>
+          <p>${price} lei</p>
+          <a href="${url}" target="_blank">Vezi produsul</a>
+        </div>
+      `;
+    });
+  });
+</script>
+
+</body>
+</html>
